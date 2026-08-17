@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XO WRLD</title>
+  <!-- Această linie conectează stilul Windows 98 direct -->
+  <link rel="stylesheet" href="https://unpkg.com/98.css">
+  <style>
+    body {
+      background-color: #210059; /* Culoarea clasică de fundal Teal Windows 98 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .window {
+      width: 320px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="window">
+    <div class="title-bar">
+      <div class="title-bar-text">xowrld.exe</div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize"></button>
+        <button aria-label="Maximize"></button>
+        <button aria-label="Close"></button>
+      </div>
+    </div>
+    <div class="window-body">
+      <p>Bine ai venit pe XO WRLD.</p>
+      <section class="field-row" style="justify-content: flex-end">
+        <button onclick="window.location.href='https://open.spotify.com/user/31jcaduiayq7onu4xb6orlw5uc44'">Spotify</button>
+        <button onclick="window.location.href='https://stats.fm/luvalexxx'">Stats.fm</button>
+		<button onclick="window.location.href='https://discord.com/users/920293716013514782'">Discord</button>
+      </section>
+    </div>
+  </div>
+
+</body>
+</html>
