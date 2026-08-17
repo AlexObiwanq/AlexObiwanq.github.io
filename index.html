@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ecstasy wrld</title>
   <link rel="stylesheet" href="https://unpkg.com/98.css">
-  <!-- Import Font Montserrat de pe Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
   
   <style>
-    /* Aplică Montserrat peste absolut toate elementele din pagină */
     * { 
       box-sizing: border-box; 
       font-family: 'Montserrat', sans-serif !important;
@@ -25,16 +23,33 @@
       padding: 0;
       font-size: 13px;
       height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
       color: #000;
+      position: relative;
     }
+
+    body::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 999;
+      background-size: 100% 3px, 3px 100%;
+      pointer-events: none;
+    }
+
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #1a002c; border-left: 1px solid #4a0072; }
+    ::-webkit-scrollbar-thumb { background: #d800a6; border: 1px inset #ff77e9; }
+    ::-webkit-scrollbar-thumb:hover { background: #ff77e9; }
 
     .title-bar {
       background: linear-gradient(90deg, #d800a6, #6a008a) !important;
-      padding: 3px 8px !important;
+      padding: 4px 8px !important;
     }
     .title-bar-text {
       font-size: 12px !important;
@@ -50,7 +65,7 @@
       display: flex; justify-content: center; align-items: center;
       z-index: 9999;
     }
-    .welcome-box { width: 340px; }
+    .welcome-box { width: 340px; box-shadow: 0px 0px 20px rgba(216, 0, 166, 0.4) !important; }
 
     #app-container {
       display: none;
@@ -60,42 +75,56 @@
     .layout { display: flex; width: 100%; height: 100%; }
 
     .sidebar {
-      width: 240px;
-      min-width: 220px;
+      width: 320px;
+      min-width: 320px;
       background: #e6c2ec;
       border-right: 3px solid #ff77e9;
-      padding: 12px;
+      padding: 15px;
       display: flex; flex-direction: column; gap: 12px;
+      box-shadow: 3px 0 15px rgba(0,0,0,0.3);
+      z-index: 10;
     }
 
     .main-content {
       flex: 1;
-      padding: 10px 30px;
+      padding: 15px 40px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
+      overflow-y: auto;
     }
 
     .site-header {
       width: 100%;
       max-width: 1080px;
       margin-top: 5px;
-      margin-bottom: 12px;
+      margin-bottom: 20px;
       text-align: center;
       background: #e6c2ec !important;
+      box-shadow: 0px 4px 10px rgba(216, 0, 166, 0.2) !important;
     }
 
     .grid-container {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 15px 25px;
+      gap: 20px 30px;
       width: 100%;
       max-width: 1080px;
+      padding-bottom: 30px;
+    }
+    
+    .window {
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2) !important;
     }
     .grid-card { 
       width: 100%; 
       background: #f3d5f7 !important;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .grid-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0px 8px 15px rgba(216, 0, 166, 0.3) !important;
     }
 
     .album-img {
@@ -104,6 +133,11 @@
       object-fit: cover;
       border: 2px inset #ffb3f3;
       margin-bottom: 5px;
+      transition: transform 0.3s ease, filter 0.3s ease !important;
+    }
+    .album-img:hover {
+      transform: scale(1.05) rotate(-1.5deg);
+      filter: drop-shadow(0 0 12px #ff77e9);
     }
 
     .controls {
@@ -113,52 +147,93 @@
       font-size: 11px !important;
       padding: 3px 10px !important;
       font-weight: 700 !important;
+      cursor: pointer;
+    }
+    .controls button:hover {
+      background: #f3d5f7 !important;
     }
 
     ul.tree-view li {
-      font-size: 12px !important;
-      line-height: 1.6;
+      font-size: 13px !important;
+      line-height: 1.8;
     }
     a {
       color: #70005d;
       font-weight: 700 !important;
-      font-size: 12px !important;
-      text-decoration: underline;
+      font-size: 13px !important;
+      text-decoration: none;
+      transition: color 0.2s;
     }
     a:hover {
       color: #d800a6;
+      text-decoration: underline;
     }
 
     label {
-      font-size: 11px !important;
+      font-size: 12px !important;
       font-weight: 700 !important;
     }
 
-    /* Secțiunea About Me cu Montserrat */
-    #about-section {
+    .page-section {
       display: none;
       width: 100%;
-      max-width: 750px;
+      max-width: 850px;
       background: #f3d5f7 !important;
       font-size: 14px !important;
-      line-height: 1.7;
+      line-height: 1.8;
       margin-top: 5px;
+      box-shadow: 0px 5px 15px rgba(216, 0, 166, 0.25) !important;
     }
 
-    #about-section p {
-      font-size: 13px !important;
-      color: #1a002c;
-      margin-bottom: 12px;
-    }
-
-    #about-section h2 {
-      font-size: 18px !important;
+    .page-section h2 {
+      font-size: 20px !important;
       font-weight: 800 !important;
       color: #4a005c;
       margin-top: 0;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
       letter-spacing: 0.5px;
+      border-bottom: 2px dashed #d800a6;
+      padding-bottom: 8px;
     }
+
+    @keyframes windowPop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .anim-pop {
+      animation: windowPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes retroBlink {
+      0%, 100% { color: #3d004d; text-shadow: none; }
+      50% { color: #ffffff; text-shadow: 0 0 8px #d800a6; }
+    }
+    .blink {
+      animation: retroBlink 1.2s infinite;
+    }
+
+    #crash-screen {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-color: #0000aa;
+      color: #ffffff;
+      padding: 60px;
+      font-family: monospace !important;
+      z-index: 99999;
+      box-sizing: border-box;
+      line-height: 1.8;
+      animation: bsodFlicker 0.08s infinite;
+    }
+    @keyframes bsodFlicker {
+      0% { opacity: 0.95; }
+      50% { opacity: 1; }
+      100% { opacity: 0.98; }
+    }
+    #crash-screen * { font-family: monospace !important; }
+    .bsod-title { font-size: 28px !important; font-weight: bold; margin-bottom: 25px; }
+    .bsod-text { font-size: 22px !important; margin-bottom: 20px; }
   </style>
 </head>
 <body>
@@ -169,20 +244,31 @@
       <div class="title-bar">
         <div class="title-bar-text">welcome.exe</div>
         <div class="title-bar-controls">
-          <button aria-label="Close" onclick="closeWelcome()"></button>
+          <button aria-label="Close" onclick="handleCloseX()"></button>
         </div>
       </div>
-      <div class="window-body" style="text-align: center; padding: 15px;">
-        <p style="margin-bottom: 15px; color: #2a003f; font-weight: 700; font-size: 13px;">heyyy welcome pe ecstasy wrld!</p>
-        <div class="field-row" style="justify-content: center; gap: 10px;">
-          <button onclick="closeWelcome()" style="padding: 4px 18px; font-size: 12px; font-weight: 700;">Ok</button>
-          <button onclick="window.open('https://google.com', '_blank')" style="padding: 4px 18px; font-size: 12px; font-weight: 700;">Help</button>
+      <div class="window-body" style="text-align: center; padding: 20px;">
+        <p style="margin-bottom: 20px; color: #2a003f; font-weight: 800; font-size: 14px;">heyyy welcome pe ecstasy wrld!</p>
+        <div class="field-row" style="justify-content: center; gap: 12px;">
+          <button onclick="closeWelcome()" style="padding: 5px 22px; font-size: 12px; font-weight: 700; cursor: pointer;">Ok</button>
+          <button onclick="window.open('https://google.com', '_blank')" style="padding: 5px 22px; font-size: 12px; font-weight: 700; cursor: pointer;">Help</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 2. SITE PRINCIPAL -->
+  <!-- 2. CRASH SCREEN (BSOD) -->
+  <div id="crash-screen">
+    <p class="bsod-title">A fatal exception 0E has occurred at 0028:C0011E3F in VXD ECSTASY(01).</p>
+    <p class="bsod-text">Daca nu esti de acord, sistemul nu poate continua si s-a prabusit.</p>
+    <br>
+    <p class="bsod-text">* Apasa F5 sau da Refresh pentru a reporni sistemul.</p>
+    <p class="bsod-text">* Daca reintri, apasa pe OK pentru a continua navigarea.</p>
+    <br><br>
+    <p class="bsod-text">System halted. Press CTRL+ALT+DEL to restart your computer.</p>
+  </div>
+
+  <!-- 3. SITE PRINCIPAL -->
   <div id="app-container">
     <div class="layout">
       
@@ -191,22 +277,23 @@
         <div class="title-bar">
           <div class="title-bar-text">Navigation</div>
         </div>
-        <p style="margin: 2px 0 6px 0; font-weight: 800; color: #4a005c; font-size: 13px; letter-spacing: 1px;">ECSTASY WRLD</p>
+        <p style="margin: 5px 0 10px 0; font-weight: 800; color: #4a005c; font-size: 15px; letter-spacing: 1px; text-align: center;">ECSTASY WRLD</p>
         
-        <ul class="tree-view" style="background: #fff0f9; padding: 8px;">
+        <ul class="tree-view" style="background: #fff0f9; padding: 12px; margin: 0; flex-grow: 1;">
           <li>
-            <strong style="font-size: 12px; font-weight: 700;">Pages</strong>
-            <ul style="margin-top: 3px;">
+            <strong style="font-size: 14px; font-weight: 800; color: #70005d;">Pages</strong>
+            <ul style="margin-top: 6px; margin-bottom: 15px;">
               <li><a href="#" onclick="showSection('home')">Home / Tracks</a></li>
               <li><a href="#" onclick="showSection('about')">About Me</a></li>
+              <li><a href="#" onclick="showSection('contact')">Contact</a></li>
             </ul>
           </li>
-          <li style="margin-top: 8px;">
-            <strong style="font-size: 12px; font-weight: 700;">Socials</strong>
-            <ul style="margin-top: 3px;">
+          <li>
+            <strong style="font-size: 14px; font-weight: 800; color: #70005d;">Socials</strong>
+            <ul style="margin-top: 6px;">
               <li><a href="https://spotify.com" target="_blank">Spotify Profile</a></li>
-              <li><a href="https://stats.fm" target="_blank">Stats.fm Analytics</a></li>
-              <li><a href="https://discord.com" target="_blank">Discord Server</a></li>
+              <li><a href="https://stats.fm/luvalexxx" target="_blank">Stats.fm Analytics</a></li>
+              <li><a href="https://discord.com" target="_blank">Discord</a></li>
             </ul>
           </li>
         </ul>
@@ -216,22 +303,21 @@
       <div class="main-content">
         
         <!-- Header Titlu sus -->
-        <div class="window site-header">
+        <div class="window site-header anim-pop">
           <div class="title-bar">
             <div class="title-bar-text">system_banner.exe</div>
           </div>
-          <div class="window-body" style="padding: 6px;">
-            <h1 style="margin: 0; font-size: 20px; letter-spacing: 3px; color: #3d004d; font-weight: 800;">ecstasy wrld</h1>
+          <div class="window-body" style="padding: 10px;">
+            <h1 class="blink" style="margin: 0; font-size: 24px; letter-spacing: 4px; font-weight: 800;">ecstasy wrld</h1>
           </div>
         </div>
 
-        <!-- SECTIUNEA 1: 6 PIESE -->
+        <!-- SECTIUNEA 1: HOME (TRACKS) -->
         <div class="grid-container" id="home-section">
           
-          <!-- Track 1: Love Me -->
-          <div class="window grid-card">
+          <div class="window grid-card anim-pop" style="animation-delay: 0.05s;">
             <div class="title-bar"><div class="title-bar-text">love_me.exe</div></div>
-            <div class="window-body" style="padding: 6px;">
+            <div class="window-body" style="padding: 8px;">
               <img src="loveme.jpg" class="album-img">
               <audio id="audio1" src="loveme.mp3"></audio>
               <div class="controls">
@@ -239,17 +325,16 @@
                 <button onclick="pauseTrack('audio1')">❚❚ Pause</button>
                 <button onclick="stopTrack('audio1')">◼ Stop</button>
               </div>
-              <div class="field-row" style="justify-content: center; margin-top: 4px;">
+              <div class="field-row" style="justify-content: center; margin-top: 6px;">
                 <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio1', this.value)" style="width: 110px;">
+                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio1', this.value)" style="width: 120px;">
               </div>
             </div>
           </div>
 
-          <!-- Track 2: Drink N Dance -->
-          <div class="window grid-card">
+          <div class="window grid-card anim-pop" style="animation-delay: 0.1s;">
             <div class="title-bar"><div class="title-bar-text">drink_n_dance.exe</div></div>
-            <div class="window-body" style="padding: 6px;">
+            <div class="window-body" style="padding: 8px;">
               <img src="drink.jpg" class="album-img">
               <audio id="audio2" src="drink.mp3"></audio>
               <div class="controls">
@@ -257,17 +342,16 @@
                 <button onclick="pauseTrack('audio2')">❚❚ Pause</button>
                 <button onclick="stopTrack('audio2')">◼ Stop</button>
               </div>
-              <div class="field-row" style="justify-content: center; margin-top: 4px;">
+              <div class="field-row" style="justify-content: center; margin-top: 6px;">
                 <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio2', this.value)" style="width: 110px;">
+                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio2', this.value)" style="width: 120px;">
               </div>
             </div>
           </div>
 
-          <!-- Track 3: Monster -->
-          <div class="window grid-card">
+          <div class="window grid-card anim-pop" style="animation-delay: 0.15s;">
             <div class="title-bar"><div class="title-bar-text">monster.exe</div></div>
-            <div class="window-body" style="padding: 6px;">
+            <div class="window-body" style="padding: 8px;">
               <img src="away.jpg" class="album-img">
               <audio id="audio3" src="away.mp3"></audio>
               <div class="controls">
@@ -275,17 +359,16 @@
                 <button onclick="pauseTrack('audio3')">❚❚ Pause</button>
                 <button onclick="stopTrack('audio3')">◼ Stop</button>
               </div>
-              <div class="field-row" style="justify-content: center; margin-top: 4px;">
+              <div class="field-row" style="justify-content: center; margin-top: 6px;">
                 <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio3', this.value)" style="width: 110px;">
+                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio3', this.value)" style="width: 120px;">
               </div>
             </div>
           </div>
 
-          <!-- Track 4: Comin Out Strong -->
-          <div class="window grid-card">
+          <div class="window grid-card anim-pop" style="animation-delay: 0.2s;">
             <div class="title-bar"><div class="title-bar-text">comin_out_strong.exe</div></div>
-            <div class="window-body" style="padding: 6px;">
+            <div class="window-body" style="padding: 8px;">
               <img src="comin.jpg" class="album-img">
               <audio id="audio4" src="comin.mp3"></audio>
               <div class="controls">
@@ -293,17 +376,16 @@
                 <button onclick="pauseTrack('audio4')">❚❚ Pause</button>
                 <button onclick="stopTrack('audio4')">◼ Stop</button>
               </div>
-              <div class="field-row" style="justify-content: center; margin-top: 4px;">
+              <div class="field-row" style="justify-content: center; margin-top: 6px;">
                 <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio4', this.value)" style="width: 110px;">
+                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio4', this.value)" style="width: 120px;">
               </div>
             </div>
           </div>
 
-          <!-- Track 5: Double Fantasy -->
-          <div class="window grid-card">
+          <div class="window grid-card anim-pop" style="animation-delay: 0.25s;">
             <div class="title-bar"><div class="title-bar-text">double_fantasy.exe</div></div>
-            <div class="window-body" style="padding: 6px;">
+            <div class="window-body" style="padding: 8px;">
               <img src="double.jpg" class="album-img">
               <audio id="audio5" src="double.mp3"></audio>
               <div class="controls">
@@ -311,17 +393,16 @@
                 <button onclick="pauseTrack('audio5')">❚❚ Pause</button>
                 <button onclick="stopTrack('audio5')">◼ Stop</button>
               </div>
-              <div class="field-row" style="justify-content: center; margin-top: 4px;">
+              <div class="field-row" style="justify-content: center; margin-top: 6px;">
                 <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio5', this.value)" style="width: 110px;">
+                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio5', this.value)" style="width: 120px;">
               </div>
             </div>
           </div>
 
-          <!-- Track 6: Rodeo -->
-          <div class="window grid-card">
+          <div class="window grid-card anim-pop" style="animation-delay: 0.3s;">
             <div class="title-bar"><div class="title-bar-text">rodeo.exe</div></div>
-            <div class="window-body" style="padding: 6px;">
+            <div class="window-body" style="padding: 8px;">
               <img src="pray.jpg" class="album-img">
               <audio id="audio6" src="pray.mp3"></audio>
               <div class="controls">
@@ -329,28 +410,48 @@
                 <button onclick="pauseTrack('audio6')">❚❚ Pause</button>
                 <button onclick="stopTrack('audio6')">◼ Stop</button>
               </div>
-              <div class="field-row" style="justify-content: center; margin-top: 4px;">
+              <div class="field-row" style="justify-content: center; margin-top: 6px;">
                 <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio6', this.value)" style="width: 110px;">
+                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio6', this.value)" style="width: 120px;">
               </div>
             </div>
           </div>
 
         </div>
 
-        <!-- SECTIUNEA 2: ABOUT ME (MONTSERRAT PESTE TOT) -->
-        <div class="window" id="about-section">
+        <!-- SECTIUNEA 2: ABOUT ME -->
+        <div class="window page-section anim-pop" id="about-section">
           <div class="title-bar">
             <div class="title-bar-text">about_me.txt</div>
           </div>
-          <div class="window-body" style="padding: 20px;">
-            <h2>welcome to ecstasy wrld.</h2>
+          <div class="window-body" style="padding: 25px;">
+            <h2>welcome to my mind.</h2>
+            <p style="color: #1a002c; font-size: 14px;">I’m just someone navigating through soundscapes, heavily inspired by dark R&B, atmospheric beats, and late-night vibes. My music taste revolves around the cinematic eras of <strong>The Weeknd</strong> (from Trilogy and Kiss Land to After Hours) and the chaotic, raw energy of <strong>Future</strong> (DS2, Monster).</p>
+            <p style="color: #1a002c; font-size: 14px;">When I’m not curating playlists or tweaking my setups, I’m usually diving deep into music lore, gaming, and building digital spaces like this one. I value aesthetics, good production, and creative freedom.</p>
+            <p style="color: #1a002c; font-size: 14px;">Explore the tracks, check out the links, and enjoy the stay.</p>
+          </div>
+        </div>
 
-            <p>I’m just someone navigating through soundscapes, heavily inspired by dark R&B, atmospheric beats, and late-night vibes. My music taste revolves around the cinematic eras of <strong>The Weeknd</strong> (from Trilogy and Kiss Land to After Hours) and the chaotic, raw energy of <strong>Future</strong> (DS2, Monster).</p>
-
-            <p>When I’m not curating playlists or tweaking my setups, I’m usually diving deep into music lore, gaming, and building digital spaces like this one. I value aesthetics, good production, and creative freedom.</p>
-
-            <p>Explore the tracks, check out the links, and enjoy the stay.</p>
+        <!-- SECTIUNEA 3: CONTACT -->
+        <div class="window page-section anim-pop" id="contact-section">
+          <div class="title-bar">
+            <div class="title-bar-text">contact_me.bat</div>
+          </div>
+          <div class="window-body" style="padding: 25px;">
+            <h2>Hit me up.</h2>
+            <p style="font-size: 14px; margin-bottom: 20px;">Send a message to the server or connect via Discord.</p>
+            
+            <div class="field-row" style="margin-bottom: 12px;">
+              <label style="width: 80px; font-size: 14px !important;">Name:</label>
+              <input type="text" style="flex: 1; padding: 4px; font-family: 'Montserrat', sans-serif;">
+            </div>
+            <div class="field-row" style="margin-bottom: 15px;">
+              <label style="width: 80px; font-size: 14px !important;">Message:</label>
+              <textarea rows="5" style="flex: 1; padding: 4px; resize: none; font-family: 'Montserrat', sans-serif;"></textarea>
+            </div>
+            <div class="field-row" style="justify-content: flex-end;">
+              <button onclick="alert('System override. Message sent to the void.')" style="padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer;">Send.exe</button>
+            </div>
           </div>
         </div>
 
@@ -364,14 +465,24 @@
       document.getElementById('app-container').style.display = 'block';
     }
 
+    function handleCloseX() {
+      document.getElementById('welcome-modal').style.display = 'none';
+      document.getElementById('crash-screen').style.display = 'block';
+    }
+
     function showSection(section) {
+      document.getElementById('home-section').style.display = 'none';
+      document.getElementById('about-section').style.display = 'none';
+      document.getElementById('contact-section').style.display = 'none';
+      
+      stopAllTracks();
+
       if (section === 'home') {
         document.getElementById('home-section').style.display = 'grid';
-        document.getElementById('about-section').style.display = 'none';
       } else if (section === 'about') {
-        document.getElementById('home-section').style.display = 'none';
         document.getElementById('about-section').style.display = 'block';
-        stopAllTracks();
+      } else if (section === 'contact') {
+        document.getElementById('contact-section').style.display = 'block';
       }
     }
 
