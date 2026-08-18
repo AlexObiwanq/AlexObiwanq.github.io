@@ -1,257 +1,370 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ecstasy wrld</title>
-  <link rel="stylesheet" href="https://unpkg.com/98.css">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
   
   <style>
     * { 
       box-sizing: border-box; 
       font-family: 'Montserrat', sans-serif !important;
+      margin: 0;
+      padding: 0;
     }
     
     body {
-      background-color: #1a002c;
-      background-image: radial-gradient(#4a0072 1px, transparent 1px);
-      background-size: 20px 20px;
+      background-color: #0b0214;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(216, 0, 166, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(106, 0, 138, 0.2) 0%, transparent 50%);
       margin: 0;
       padding: 0;
-      font-size: 13px;
       height: 100vh;
       overflow-x: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: #000;
+      color: #ffffff;
       position: relative;
     }
 
+    /* OVERLAY CRT SCANLINES */
     body::before {
       content: " ";
       display: block;
       position: absolute;
       top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
       z-index: 999;
       background-size: 100% 3px, 3px 100%;
       pointer-events: none;
     }
 
-    ::-webkit-scrollbar { width: 10px; }
-    ::-webkit-scrollbar-track { background: #1a002c; border-left: 1px solid #4a0072; }
-    ::-webkit-scrollbar-thumb { background: #d800a6; border: 1px inset #ff77e9; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0214; }
+    ::-webkit-scrollbar-thumb { background: #d800a6; border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: #ff77e9; }
 
-    .title-bar {
-      background: linear-gradient(90deg, #d800a6, #6a008a) !important;
-      padding: 4px 8px !important;
+    @keyframes retroBlink {
+      0%, 100% { color: #d800a6; text-shadow: 0 0 10px rgba(216, 0, 166, 0.4); }
+      50% { color: #ffffff; text-shadow: 0 0 20px #ff77e9, 0 0 30px #d800a6; }
     }
-    .title-bar-text {
-      font-size: 12px !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.5px;
-    }
+    .blink { animation: retroBlink 1.5s infinite; }
 
+    @keyframes popIn {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .anim-pop { animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+    /* 1. POPUP WELCOME */
     #welcome-modal {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: rgba(20, 0, 35, 0.85);
+      background: rgba(5, 1, 10, 0.85);
+      backdrop-filter: blur(12px);
       display: flex; justify-content: center; align-items: center;
       z-index: 9999;
+      padding: 15px;
     }
-    .welcome-box { width: 340px; box-shadow: 0px 0px 20px rgba(216, 0, 166, 0.4) !important; }
+    
+    .welcome-box { 
+      width: 360px; 
+      max-width: 100%;
+      background: rgba(20, 8, 32, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(216, 0, 166, 0.25);
+      overflow: hidden;
+    }
 
+    .modal-header {
+      background: rgba(216, 0, 166, 0.2);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #d800a6, #8000ff);
+      border: none;
+      color: white;
+      padding: 8px 24px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(216, 0, 166, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      padding: 8px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* LAYOUT SITE PRINCIPAL */
     #app-container {
       display: none;
       width: 100vw; height: 100vh;
-      background-color: transparent;
     }
-    .layout { display: flex; width: 100%; height: 100%; }
+    .layout { display: flex; width: 100%; height: 100%; position: relative; }
 
+    /* TOGGLE SIDEBAR MOBILE BUTTON */
+    .mobile-menu-btn {
+      display: none;
+      position: fixed;
+      top: 15px; left: 15px;
+      z-index: 101;
+      background: rgba(216, 0, 166, 0.3);
+      border: 1px solid rgba(255, 119, 233, 0.4);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* SIDEBAR */
     .sidebar {
-      width: 320px;
-      min-width: 320px;
-      background: #e6c2ec;
-      border-right: 3px solid #ff77e9;
-      padding: 15px;
-      display: flex; flex-direction: column; gap: 12px;
-      box-shadow: 3px 0 15px rgba(0,0,0,0.3);
-      z-index: 10;
+      width: 280px;
+      min-width: 280px;
+      background: rgba(20, 8, 32, 0.7);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 30px 20px;
+      display: flex; flex-direction: column; gap: 25px;
+      z-index: 100;
+      transition: transform 0.3s ease;
     }
 
+    .sidebar-title { font-size: 18px; font-weight: 800; letter-spacing: 2px; text-align: center; }
+    .nav-section { display: flex; flex-direction: column; gap: 10px; }
+    .nav-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255, 255, 255, 0.4); font-weight: 700; }
+
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .nav-list a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 10px;
+      display: flex; align-items: center; gap: 12px;
+      transition: all 0.2s ease;
+    }
+    .nav-list a svg, .nav-list a i { width: 16px; text-align: center; color: #ff77e9; }
+    .nav-list a:hover { color: #fff; background: rgba(216, 0, 166, 0.2); transform: translateX(4px); }
+
+    /* MAIN CONTENT AREA */
     .main-content {
       flex: 1;
-      padding: 15px 40px;
+      padding: 30px 50px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
       overflow-y: auto;
     }
 
     .site-header {
       width: 100%;
-      max-width: 1080px;
-      margin-top: 5px;
-      margin-bottom: 20px;
+      max-width: 1000px;
+      margin-bottom: 30px;
       text-align: center;
-      background: #e6c2ec !important;
-      box-shadow: 0px 4px 10px rgba(216, 0, 166, 0.2) !important;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
     }
 
+    .site-header h1 { font-size: 32px; font-weight: 800; letter-spacing: 6px; text-transform: uppercase; }
+
+    /* GRID MELODII */
     .grid-container {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 20px 30px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
       width: 100%;
-      max-width: 1080px;
-      padding-bottom: 30px;
+      max-width: 1000px;
+      padding-bottom: 40px;
     }
-    
-    .window {
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2) !important;
-    }
-    .grid-card { 
-      width: 100%; 
-      background: #f3d5f7 !important;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    .grid-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(10px);
     }
     .grid-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0px 8px 15px rgba(216, 0, 166, 0.3) !important;
+      transform: translateY(-6px);
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(216, 0, 166, 0.4);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(216, 0, 166, 0.2);
     }
+
+    .card-title { font-size: 13px; font-weight: 700; color: rgba(255, 255, 255, 0.6); text-align: center; letter-spacing: 1px; }
 
     .album-img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
-      border: 2px inset #ffb3f3;
-      margin-bottom: 5px;
-      transition: transform 0.3s ease, filter 0.3s ease !important;
-    }
-    .album-img:hover {
-      transform: scale(1.05) rotate(-1.5deg);
-      filter: drop-shadow(0 0 12px #ff77e9);
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
 
-    .controls {
-      display: flex; gap: 6px; justify-content: center; margin: 3px 0;
-    }
+    .controls { display: flex; gap: 8px; justify-content: center; margin-top: 4px; }
     .controls button {
-      font-size: 11px !important;
-      padding: 3px 10px !important;
-      font-weight: 700 !important;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 12px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-weight: 600;
       cursor: pointer;
     }
-    .controls button:hover {
-      background: #f3d5f7 !important;
+    .controls button:hover { background: #d800a6; border-color: #ff77e9; }
+
+    .volume-box { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 4px; }
+    .volume-box label { font-size: 11px; opacity: 0.6; font-weight: 600; }
+    
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100px;
+      background: rgba(255, 255, 255, 0.1);
+      height: 4px;
+      border-radius: 2px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #d800a6;
+      cursor: pointer;
     }
 
-    ul.tree-view li {
-      font-size: 13px !important;
-      line-height: 1.8;
-    }
-    a {
-      color: #70005d;
-      font-weight: 700 !important;
-      font-size: 13px !important;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    a:hover {
-      color: #d800a6;
-      text-decoration: underline;
-    }
-
-    label {
-      font-size: 12px !important;
-      font-weight: 700 !important;
-    }
-
+    /* PAGINI SECTIUNI */
     .page-section {
       display: none;
       width: 100%;
-      max-width: 850px;
-      background: #f3d5f7 !important;
-      font-size: 14px !important;
-      line-height: 1.8;
-      margin-top: 5px;
-      box-shadow: 0px 5px 15px rgba(216, 0, 166, 0.25) !important;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 35px;
+      backdrop-filter: blur(15px);
     }
 
-    .page-section h2 {
-      font-size: 20px !important;
-      font-weight: 800 !important;
-      color: #4a005c;
-      margin-top: 0;
-      margin-bottom: 15px;
-      letter-spacing: 0.5px;
-      border-bottom: 2px dashed #d800a6;
-      padding-bottom: 8px;
+    .page-section h2 { font-size: 24px; font-weight: 800; color: #ff77e9; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 10px; }
+    .page-section p { color: rgba(255, 255, 255, 0.8); font-size: 15px; line-height: 1.8; margin-bottom: 15px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+    .form-group label { font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.7); }
+    .form-group input, .form-group textarea {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      color: #fff;
+      outline: none;
     }
 
-    @keyframes windowPop {
-      0% { transform: scale(0.9); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .anim-pop {
-      animation: windowPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes retroBlink {
-      0%, 100% { color: #3d004d; text-shadow: none; }
-      50% { color: #ffffff; text-shadow: 0 0 8px #d800a6; }
-    }
-    .blink {
-      animation: retroBlink 1.2s infinite;
-    }
-
+    /* BSOD CRASH SCREEN */
     #crash-screen {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background-color: #0000aa;
-      color: #ffffff;
-      padding: 60px;
+      background-color: #1a002c;
+      color: #ff77e9;
+      padding: 30px;
       font-family: monospace !important;
       z-index: 99999;
-      box-sizing: border-box;
       line-height: 1.8;
-      animation: bsodFlicker 0.08s infinite;
     }
-    @keyframes bsodFlicker {
-      0% { opacity: 0.95; }
-      50% { opacity: 1; }
-      100% { opacity: 0.98; }
+
+    /* RESPONSIVE MOBILE STYLES */
+    @media (max-width: 768px) {
+      .mobile-menu-btn { display: block; }
+
+      .sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+        box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+      }
+      .sidebar.active { transform: translateX(0); }
+
+      .main-content { padding: 70px 15px 30px 15px; }
+
+      .site-header h1 { font-size: 22px; letter-spacing: 3px; }
+
+      .grid-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .page-section { padding: 20px; }
+      .page-section h2 { font-size: 20px; }
+
+      #crash-screen { padding: 25px; }
+      #crash-screen p { font-size: 14px !important; }
     }
-    #crash-screen * { font-family: monospace !important; }
-    .bsod-title { font-size: 28px !important; font-weight: bold; margin-bottom: 25px; }
-    .bsod-text { font-size: 22px !important; margin-bottom: 20px; }
   </style>
 </head>
 <body>
 
-  <!-- 1. POPUP WELCOME -->
+  <!-- BUTTON TOGGLE MENU PE MOBILE -->
+  <button class="mobile-menu-btn" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <!-- 1. WELCOME POPUP -->
   <div id="welcome-modal">
-    <div class="window welcome-box" style="background: #e6c2ec;">
-      <div class="title-bar">
-        <div class="title-bar-text">welcome.exe</div>
-        <div class="title-bar-controls">
-          <button aria-label="Close" onclick="handleCloseX()"></button>
-        </div>
+    <div class="welcome-box anim-pop">
+      <div class="modal-header">
+        <span style="font-size: 12px; font-weight: 700; opacity: 0.7;">welcome.exe</span>
+        <button class="close-btn" onclick="handleCloseX()">✕</button>
       </div>
-      <div class="window-body" style="text-align: center; padding: 20px;">
-        <p style="margin-bottom: 20px; color: #2a003f; font-weight: 800; font-size: 14px;">heyyy welcome pe ecstasy wrld!</p>
-        <div class="field-row" style="justify-content: center; gap: 12px;">
-          <button onclick="closeWelcome()" style="padding: 5px 22px; font-size: 12px; font-weight: 700; cursor: pointer;">Ok</button>
-          <button onclick="window.open('https://google.com', '_blank')" style="padding: 5px 22px; font-size: 12px; font-weight: 700; cursor: pointer;">Help</button>
+      <div style="text-align: center; padding: 25px 20px;">
+        <p style="margin-bottom: 25px; font-weight: 700; font-size: 15px; color: #fff;">heyyy welcome to ecstasy wrld!</p>
+        <div style="display: flex; justify-content: center; gap: 12px;">
+          <button class="btn-primary" onclick="closeWelcome()">Ok</button>
+          <button class="btn-secondary" onclick="window.open('https://google.com', '_blank')">Help</button>
         </div>
       </div>
     </div>
@@ -259,200 +372,168 @@
 
   <!-- 2. CRASH SCREEN (BSOD) -->
   <div id="crash-screen">
-    <p class="bsod-title">A fatal exception 0E has occurred at 0028:C0011E3F in VXD ECSTASY(01).</p>
-    <p class="bsod-text">Daca nu esti de acord, sistemul nu poate continua si s-a prabusit.</p>
+    <p style="font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #ffffff;">A fatal exception 0E has occurred at 0028:C0011E3F in VXD ECSTASY(01).</p>
+    <p style="font-size: 16px;">If you do not agree, the system cannot continue and has crashed.</p>
     <br>
-    <p class="bsod-text">* Apasa F5 sau da Refresh pentru a reporni sistemul.</p>
-    <p class="bsod-text">* Daca reintri, apasa pe OK pentru a continua navigarea.</p>
+    <p style="font-size: 16px;">* Press F5 or Refresh to restart the system.</p>
+    <p style="font-size: 16px;">* If you return, click OK to continue browsing.</p>
     <br><br>
-    <p class="bsod-text">System halted. Press CTRL+ALT+DEL to restart your computer.</p>
+    <p style="font-size: 16px; color: #ffffff;">System halted. Press CTRL+ALT+DEL to restart your computer.</p>
   </div>
 
-  <!-- 3. SITE PRINCIPAL -->
+  <!-- 3. MAIN SITE -->
   <div id="app-container">
     <div class="layout">
       
       <!-- Sidebar Navigation -->
-      <div class="sidebar">
-        <div class="title-bar">
-          <div class="title-bar-text">Navigation</div>
-        </div>
-        <p style="margin: 5px 0 10px 0; font-weight: 800; color: #4a005c; font-size: 15px; letter-spacing: 1px; text-align: center;">ECSTASY WRLD</p>
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-title blink">ECSTASY WRLD</div>
         
-        <ul class="tree-view" style="background: #fff0f9; padding: 12px; margin: 0; flex-grow: 1;">
-          <li>
-            <strong style="font-size: 14px; font-weight: 800; color: #70005d;">Pages</strong>
-            <ul style="margin-top: 6px; margin-bottom: 15px;">
-              <li><a href="#" onclick="showSection('home')">Home / Tracks</a></li>
-              <li><a href="#" onclick="showSection('about')">About Me</a></li>
-              <li><a href="#" onclick="showSection('contact')">Contact</a></li>
-            </ul>
-          </li>
-          <li>
-            <strong style="font-size: 14px; font-weight: 800; color: #70005d;">Socials</strong>
-            <ul style="margin-top: 6px;">
-              <li><a href="https://spotify.com" target="_blank">Spotify Profile</a></li>
-              <li><a href="https://stats.fm/luvalexxx" target="_blank">Stats.fm Analytics</a></li>
-              <li><a href="https://discord.com" target="_blank">Discord</a></li>
-            </ul>
-          </li>
-        </ul>
+        <div class="nav-section">
+          <div class="nav-section-title">Pages</div>
+          <ul class="nav-list">
+            <li><a href="#" onclick="showSection('home')"><i class="fa-solid fa-house"></i> Home / Tracks</a></li>
+            <li><a href="#" onclick="showSection('about')"><i class="fa-solid fa-user"></i> About Me</a></li>
+            <li><a href="#" onclick="showSection('contact')"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Socials</div>
+          <ul class="nav-list">
+            <!-- LINK SPOTIFY ACTUALIZAT -->
+            <li><a href="https://open.spotify.com/user/31jcaduiayq7onu4xb6orlw5uc44" target="_blank"><i class="fa-brands fa-spotify"></i> Spotify</a></li>
+            <li><a href="https://stats.fm/luvalexxx" target="_blank"><i class="fa-solid fa-chart-simple"></i> Stats.fm</a></li>
+            <li><a href="https://discord.com" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a></li>
+          </ul>
+        </div>
       </div>
 
-      <!-- Main Content -->
+      <!-- Main Content Area -->
       <div class="main-content">
         
-        <!-- Header Titlu sus -->
-        <div class="window site-header anim-pop">
-          <div class="title-bar">
-            <div class="title-bar-text">system_banner.exe</div>
-          </div>
-          <div class="window-body" style="padding: 10px;">
-            <h1 class="blink" style="margin: 0; font-size: 24px; letter-spacing: 4px; font-weight: 800;">ecstasy wrld</h1>
-          </div>
+        <!-- Header Top -->
+        <div class="site-header anim-pop">
+          <h1 class="blink">ecstasy wrld</h1>
         </div>
 
-        <!-- SECTIUNEA 1: HOME (TRACKS) -->
+        <!-- SECTION 1: HOME (TRACKS) -->
         <div class="grid-container" id="home-section">
           
-          <div class="window grid-card anim-pop" style="animation-delay: 0.05s;">
-            <div class="title-bar"><div class="title-bar-text">love_me.exe</div></div>
-            <div class="window-body" style="padding: 8px;">
-              <img src="loveme.jpg" class="album-img">
-              <audio id="audio1" src="loveme.mp3"></audio>
-              <div class="controls">
-                <button onclick="playTrack('audio1')">► Play</button>
-                <button onclick="pauseTrack('audio1')">❚❚ Pause</button>
-                <button onclick="stopTrack('audio1')">◼ Stop</button>
-              </div>
-              <div class="field-row" style="justify-content: center; margin-top: 6px;">
-                <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio1', this.value)" style="width: 120px;">
-              </div>
+          <div class="grid-card anim-pop" style="animation-delay: 0.05s;">
+            <div class="card-title">love_me.exe</div>
+            <img src="loveme.jpg" class="album-img">
+            <audio id="audio1" src="loveme.mp3"></audio>
+            <div class="controls">
+              <button onclick="playTrack('audio1')">► Play</button>
+              <button onclick="pauseTrack('audio1')">❚❚ Pause</button>
+              <button onclick="stopTrack('audio1')">◼ Stop</button>
+            </div>
+            <div class="volume-box">
+              <label>Vol</label>
+              <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio1', this.value)">
             </div>
           </div>
 
-          <div class="window grid-card anim-pop" style="animation-delay: 0.1s;">
-            <div class="title-bar"><div class="title-bar-text">drink_n_dance.exe</div></div>
-            <div class="window-body" style="padding: 8px;">
-              <img src="drink.jpg" class="album-img">
-              <audio id="audio2" src="drink.mp3"></audio>
-              <div class="controls">
-                <button onclick="playTrack('audio2')">► Play</button>
-                <button onclick="pauseTrack('audio2')">❚❚ Pause</button>
-                <button onclick="stopTrack('audio2')">◼ Stop</button>
-              </div>
-              <div class="field-row" style="justify-content: center; margin-top: 6px;">
-                <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio2', this.value)" style="width: 120px;">
-              </div>
+          <div class="grid-card anim-pop" style="animation-delay: 0.1s;">
+            <div class="card-title">drink_n_dance.exe</div>
+            <img src="drink.jpg" class="album-img">
+            <audio id="audio2" src="drink.mp3"></audio>
+            <div class="controls">
+              <button onclick="playTrack('audio2')">► Play</button>
+              <button onclick="pauseTrack('audio2')">❚❚ Pause</button>
+              <button onclick="stopTrack('audio2')">◼ Stop</button>
+            </div>
+            <div class="volume-box">
+              <label>Vol</label>
+              <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio2', this.value)">
             </div>
           </div>
 
-          <div class="window grid-card anim-pop" style="animation-delay: 0.15s;">
-            <div class="title-bar"><div class="title-bar-text">monster.exe</div></div>
-            <div class="window-body" style="padding: 8px;">
-              <img src="away.jpg" class="album-img">
-              <audio id="audio3" src="away.mp3"></audio>
-              <div class="controls">
-                <button onclick="playTrack('audio3')">► Play</button>
-                <button onclick="pauseTrack('audio3')">❚❚ Pause</button>
-                <button onclick="stopTrack('audio3')">◼ Stop</button>
-              </div>
-              <div class="field-row" style="justify-content: center; margin-top: 6px;">
-                <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio3', this.value)" style="width: 120px;">
-              </div>
+          <div class="grid-card anim-pop" style="animation-delay: 0.15s;">
+            <div class="card-title">monster.exe</div>
+            <img src="away.jpg" class="album-img">
+            <audio id="audio3" src="away.mp3"></audio>
+            <div class="controls">
+              <button onclick="playTrack('audio3')">► Play</button>
+              <button onclick="pauseTrack('audio3')">❚❚ Pause</button>
+              <button onclick="stopTrack('audio3')">◼ Stop</button>
+            </div>
+            <div class="volume-box">
+              <label>Vol</label>
+              <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio3', this.value)">
             </div>
           </div>
 
-          <div class="window grid-card anim-pop" style="animation-delay: 0.2s;">
-            <div class="title-bar"><div class="title-bar-text">comin_out_strong.exe</div></div>
-            <div class="window-body" style="padding: 8px;">
-              <img src="comin.jpg" class="album-img">
-              <audio id="audio4" src="comin.mp3"></audio>
-              <div class="controls">
-                <button onclick="playTrack('audio4')">► Play</button>
-                <button onclick="pauseTrack('audio4')">❚❚ Pause</button>
-                <button onclick="stopTrack('audio4')">◼ Stop</button>
-              </div>
-              <div class="field-row" style="justify-content: center; margin-top: 6px;">
-                <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio4', this.value)" style="width: 120px;">
-              </div>
+          <div class="grid-card anim-pop" style="animation-delay: 0.2s;">
+            <div class="card-title">comin_out_strong.exe</div>
+            <img src="comin.jpg" class="album-img">
+            <audio id="audio4" src="comin.mp3"></audio>
+            <div class="controls">
+              <button onclick="playTrack('audio4')">► Play</button>
+              <button onclick="pauseTrack('audio4')">❚❚ Pause</button>
+              <button onclick="stopTrack('audio4')">◼ Stop</button>
+            </div>
+            <div class="volume-box">
+              <label>Vol</label>
+              <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio4', this.value)">
             </div>
           </div>
 
-          <div class="window grid-card anim-pop" style="animation-delay: 0.25s;">
-            <div class="title-bar"><div class="title-bar-text">double_fantasy.exe</div></div>
-            <div class="window-body" style="padding: 8px;">
-              <img src="double.jpg" class="album-img">
-              <audio id="audio5" src="double.mp3"></audio>
-              <div class="controls">
-                <button onclick="playTrack('audio5')">► Play</button>
-                <button onclick="pauseTrack('audio5')">❚❚ Pause</button>
-                <button onclick="stopTrack('audio5')">◼ Stop</button>
-              </div>
-              <div class="field-row" style="justify-content: center; margin-top: 6px;">
-                <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio5', this.value)" style="width: 120px;">
-              </div>
+          <div class="grid-card anim-pop" style="animation-delay: 0.25s;">
+            <div class="card-title">double_fantasy.exe</div>
+            <img src="double.jpg" class="album-img">
+            <audio id="audio5" src="double.mp3"></audio>
+            <div class="controls">
+              <button onclick="playTrack('audio5')">► Play</button>
+              <button onclick="pauseTrack('audio5')">❚❚ Pause</button>
+              <button onclick="stopTrack('audio5')">◼ Stop</button>
+            </div>
+            <div class="volume-box">
+              <label>Vol</label>
+              <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio5', this.value)">
             </div>
           </div>
 
-          <div class="window grid-card anim-pop" style="animation-delay: 0.3s;">
-            <div class="title-bar"><div class="title-bar-text">rodeo.exe</div></div>
-            <div class="window-body" style="padding: 8px;">
-              <img src="pray.jpg" class="album-img">
-              <audio id="audio6" src="pray.mp3"></audio>
-              <div class="controls">
-                <button onclick="playTrack('audio6')">► Play</button>
-                <button onclick="pauseTrack('audio6')">❚❚ Pause</button>
-                <button onclick="stopTrack('audio6')">◼ Stop</button>
-              </div>
-              <div class="field-row" style="justify-content: center; margin-top: 6px;">
-                <label>Vol:</label>
-                <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio6', this.value)" style="width: 120px;">
-              </div>
+          <div class="grid-card anim-pop" style="animation-delay: 0.3s;">
+            <div class="card-title">rodeo.exe</div>
+            <img src="pray.jpg" class="album-img">
+            <audio id="audio6" src="pray.mp3"></audio>
+            <div class="controls">
+              <button onclick="playTrack('audio6')">► Play</button>
+              <button onclick="pauseTrack('audio6')">❚❚ Pause</button>
+              <button onclick="stopTrack('audio6')">◼ Stop</button>
+            </div>
+            <div class="volume-box">
+              <label>Vol</label>
+              <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol('audio6', this.value)">
             </div>
           </div>
 
         </div>
 
-        <!-- SECTIUNEA 2: ABOUT ME -->
-        <div class="window page-section anim-pop" id="about-section">
-          <div class="title-bar">
-            <div class="title-bar-text">about_me.txt</div>
-          </div>
-          <div class="window-body" style="padding: 25px;">
-            <h2>welcome to my mind.</h2>
-            <p style="color: #1a002c; font-size: 14px;">I’m just someone navigating through soundscapes, heavily inspired by dark R&B, atmospheric beats, and late-night vibes. My music taste revolves around the cinematic eras of <strong>The Weeknd</strong> (from Trilogy and Kiss Land to After Hours) and the chaotic, raw energy of <strong>Future</strong> (DS2, Monster).</p>
-            <p style="color: #1a002c; font-size: 14px;">When I’m not curating playlists or tweaking my setups, I’m usually diving deep into music lore, gaming, and building digital spaces like this one. I value aesthetics, good production, and creative freedom.</p>
-            <p style="color: #1a002c; font-size: 14px;">Explore the tracks, check out the links, and enjoy the stay.</p>
-          </div>
+        <!-- SECTION 2: ABOUT ME -->
+        <div class="page-section anim-pop" id="about-section">
+          <h2>welcome to my mind.</h2>
+          <p>I’m just someone navigating through soundscapes, heavily inspired by dark R&B, atmospheric beats, and late-night vibes. My music taste revolves around the cinematic eras of <strong>The Weeknd</strong> (from Trilogy and Kiss Land to After Hours) and the chaotic, raw energy of <strong>Future</strong> (DS2, Monster).</p>
+          <p>When I’m not curating playlists or tweaking my setups, I’m usually diving deep into music lore, gaming, and building digital spaces like this one. I value aesthetics, good production, and creative freedom.</p>
+          <p>Explore the tracks, check out the links, and enjoy the stay.</p>
         </div>
 
-        <!-- SECTIUNEA 3: CONTACT -->
-        <div class="window page-section anim-pop" id="contact-section">
-          <div class="title-bar">
-            <div class="title-bar-text">contact_me.bat</div>
+        <!-- SECTION 3: CONTACT -->
+        <div class="page-section anim-pop" id="contact-section">
+          <h2>Hit me up.</h2>
+          <p>Send a message to the server or connect via Discord.</p>
+          
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" placeholder="Your name...">
           </div>
-          <div class="window-body" style="padding: 25px;">
-            <h2>Hit me up.</h2>
-            <p style="font-size: 14px; margin-bottom: 20px;">Send a message to the server or connect via Discord.</p>
-            
-            <div class="field-row" style="margin-bottom: 12px;">
-              <label style="width: 80px; font-size: 14px !important;">Name:</label>
-              <input type="text" style="flex: 1; padding: 4px; font-family: 'Montserrat', sans-serif;">
-            </div>
-            <div class="field-row" style="margin-bottom: 15px;">
-              <label style="width: 80px; font-size: 14px !important;">Message:</label>
-              <textarea rows="5" style="flex: 1; padding: 4px; resize: none; font-family: 'Montserrat', sans-serif;"></textarea>
-            </div>
-            <div class="field-row" style="justify-content: flex-end;">
-              <button onclick="alert('System override. Message sent to the void.')" style="padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer;">Send.exe</button>
-            </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea rows="5" placeholder="Your message..."></textarea>
           </div>
+          <button class="btn-primary" onclick="alert('System override. Message sent to the void.')">Send.exe</button>
         </div>
 
       </div>
@@ -470,6 +551,10 @@
       document.getElementById('crash-screen').style.display = 'block';
     }
 
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('active');
+    }
+
     function showSection(section) {
       document.getElementById('home-section').style.display = 'none';
       document.getElementById('about-section').style.display = 'none';
@@ -484,6 +569,8 @@
       } else if (section === 'contact') {
         document.getElementById('contact-section').style.display = 'block';
       }
+
+      document.getElementById('sidebar').classList.remove('active');
     }
 
     function playTrack(id) {
