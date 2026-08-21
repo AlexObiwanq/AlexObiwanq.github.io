@@ -1,1 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>R6 Leaderboard</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif !important;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0b0214;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(216, 0, 166, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(106, 0, 138, 0.2) 0%, transparent 50%);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      position: relative;
+    }
+
+    /* CRT SCANLINES OVERLAY */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+      z-index: 999;
+      background-size: 100% 3px, 3px 100%;
+      pointer-events: none;
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0214; }
+    ::-webkit-scrollbar-thumb { background: #d800a6; border-radius: 10px; }
+
+    /* CONTAINER PRINCIPAL */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      height: 100%;
+    }
+
+    /* HERO HEADER */
+    .hero {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 24px 20px;
+      border-radius: 24px;
+      backdrop-filter: blur(12px);
+    }
+
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #ff77e9, #d800a6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 13px;
+    }
+
+    /* CARD GOOGLE SHEETS IFRAME */
+    .sheets-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 12px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(216, 0, 166, 0.15);
+      overflow: hidden;
+      height: 75vh;
+      min-height: 520px;
+    }
+
+    .sheets-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 16px;
+      background: #ffffff;
+    }
+
+    /* RESPONSIVE MOBILE */
+    @media (max-width: 768px) {
+      body { padding: 15px 10px; }
+      .hero h1 { font-size: 20px; letter-spacing: 2px; }
+      .sheets-card { height: 80vh; min-height: 420px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- HERO HEADER -->
+    <div class="hero">
+      <h1>Rainbow Six Siege Ranking</h1>
+      <p>Live Google Sheets Data & Player Rankings</p>
+    </div>
+
+    <!-- GOOGLE SHEETS EMBED CARD -->
+    <div class="sheets-card">
+      <iframe 
+        class="sheets-iframe" 
+        src="https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRd4Eo27b0kDly5kGAZZaVNm2nVSMjzvOn-e8SGLGUey9tLvhs2APvhQ3XpxKPjuSVq3ViT8iQCSvbF/pubhtml?gid=69233394&single=true&widget=true&headers=false">
+      </iframe>
+    </div>
+
+  </div>
+
+</body>
+</html>
