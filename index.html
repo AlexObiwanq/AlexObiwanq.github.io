@@ -63,6 +63,84 @@
     }
     .anim-pop { animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+    .shake { animation: shake 0.4s ease-in-out; }
+
+    /* 0. PASSWORD OVERLAY (BLOCARE ACCESS) */
+    #pass-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(5, 1, 10, 0.95);
+      backdrop-filter: blur(20px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      padding: 20px;
+    }
+
+    .pass-box {
+      width: 380px;
+      max-width: 100%;
+      background: rgba(20, 8, 32, 0.85);
+      border: 1px solid rgba(216, 0, 166, 0.3);
+      border-radius: 24px;
+      padding: 30px 25px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(216, 0, 166, 0.3);
+    }
+
+    .pass-box h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ff77e9;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .pass-box p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 20px;
+    }
+
+    .pass-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pass-input-group input {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      text-align: center;
+      transition: border 0.2s;
+    }
+
+    .pass-input-group input:focus {
+      border-color: #d800a6;
+      box-shadow: 0 0 10px rgba(216, 0, 166, 0.4);
+    }
+
+    .pass-error-msg {
+      color: #ff3366;
+      font-size: 12px;
+      font-weight: 600;
+      min-height: 18px;
+      margin-top: 4px;
+    }
+
     /* 1. POPUP WELCOME */
     #welcome-modal {
       position: fixed;
@@ -348,13 +426,28 @@
 </head>
 <body>
 
+  <!-- 0. PASSWORD OVERLAY -->
+  <div id="pass-overlay">
+    <div class="pass-box anim-pop" id="passBox">
+      <i class="fa-solid fa-lock" style="font-size: 32px; color: #ff77e9; margin-bottom: 12px;"></i>
+      <h2>Access Restricted</h2>
+      <p>Enter system password to continue.</p>
+      
+      <div class="pass-input-group">
+        <input type="password" id="passInput" placeholder="Password..." onkeypress="handlePassKey(event)">
+        <button class="btn-primary" onclick="checkPassword()">Unlock</button>
+      </div>
+      <div class="pass-error-msg" id="passError"></div>
+    </div>
+  </div>
+
   <!-- BUTTON TOGGLE MENU PE MOBILE -->
   <button class="mobile-menu-btn" onclick="toggleSidebar()">
     <i class="fa-solid fa-bars"></i>
   </button>
 
   <!-- 1. WELCOME POPUP -->
-  <div id="welcome-modal">
+  <div id="welcome-modal" style="display: none;">
     <div class="welcome-box anim-pop">
       <div class="modal-header">
         <span style="font-size: 12px; font-weight: 700; opacity: 0.7;">welcome.exe</span>
@@ -401,7 +494,6 @@
         <div class="nav-section">
           <div class="nav-section-title">Socials</div>
           <ul class="nav-list">
-            <!-- LINK SPOTIFY ACTUALIZAT -->
             <li><a href="https://open.spotify.com/user/31jcaduiayq7onu4xb6orlw5uc44" target="_blank"><i class="fa-brands fa-spotify"></i> Spotify</a></li>
             <li><a href="https://stats.fm/luvalexxx" target="_blank"><i class="fa-solid fa-chart-simple"></i> Stats.fm</a></li>
             <li><a href="https://discord.com" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a></li>
@@ -541,6 +633,30 @@
   </div>
 
   <script>
+    const CORRECT_PASSWORD = "sobistian2009sugepuledecal";
+
+    function checkPassword() {
+      const input = document.getElementById("passInput").value;
+      const passBox = document.getElementById("passBox");
+      const passError = document.getElementById("passError");
+
+      if (input === CORRECT_PASSWORD) {
+        document.getElementById("pass-overlay").style.display = "none";
+        document.getElementById("welcome-modal").style.display = "flex";
+      } else {
+        passError.textContent = "Access Denied: Incorrect Password";
+        passBox.classList.remove("shake");
+        void passBox.offsetWidth; // Force reflow
+        passBox.classList.add("shake");
+      }
+    }
+
+    function handlePassKey(event) {
+      if (event.key === "Enter") {
+        checkPassword();
+      }
+    }
+
     function closeWelcome() {
       document.getElementById('welcome-modal').style.display = 'none';
       document.getElementById('app-container').style.display = 'block';
